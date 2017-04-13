@@ -1,26 +1,28 @@
 {
-    "name": "sebastian/git",
-    "description": "Simple wrapper for Git",
-    "keywords": ["git"],
-    "homepage": "http://www.github.com/sebastianbergmann/git",
-    "license": "BSD-3-Clause",
-    "authors": [
-        {
-            "name": "Sebastian Bergmann",
-            "email": "sebastian@phpunit.de"
-        }
-    ],
-    "require": {
-        "php": ">=5.3.3"
+  "name": "professionalweb/git",
+  "description": "Simple wrapper for Git",
+  "keywords": [
+    "git"
+  ],
+  "homepage": "http://www.github.com/sebastianbergmann/git",
+  "license": "BSD-3-Clause",
+  "version": "2.2.0",
+  "authors": [
+    {
+      "name": "Sebastian Bergmann",
+      "email": "sebastian@phpunit.de"
     },
-    "autoload": {
-        "classmap": [
-            "src/"
-        ]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.1-dev"
-        }
+    {
+      "name": "Sergey Zinchenko",
+      "email": "zinchenko@web-development.pw"
     }
+  ],
+  "require": {
+    "php": ">=5.3.3"
+  },
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  }
 }
