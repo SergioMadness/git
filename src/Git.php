@@ -47,6 +47,52 @@ class Git
     }
 
     /**
+     * Clone repository
+     *
+     * @param string $url
+     * @param array $params
+     */
+    public function cloneFrom($url, $params = array())
+    {
+        $params[] = '-q ' . $url;
+        $this->execute('clone ' . implode(' ', $params) . ' ' . $this->repositoryPath);
+    }
+
+    /**
+     * "Pull" command
+     */
+    public function pull()
+    {
+        $this->execute('pull');
+    }
+
+    /**
+     * Add files to commit
+     *
+     * @param array $files
+     */
+    public function add(array $files)
+    {
+        $this->execute('add ' . implode(' ', $files));
+    }
+
+    /**
+     * Add all changed files to commit
+     */
+    public function addAll()
+    {
+        $this->execute('add -A');
+    }
+
+    /**
+     * Push commit to repository
+     */
+    public function push()
+    {
+        $this->execute('push');
+    }
+
+    /**
      * @return string
      */
     public function getCurrentBranch()
@@ -59,6 +105,7 @@ class Git
     /**
      * @param  string $from
      * @param  string $to
+     *
      * @return string
      */
     public function getDiff($from, $to)
@@ -79,8 +126,8 @@ class Git
             'log --no-merges --date-order --reverse --format=medium'
         );
 
-        $numLines  = count($output);
-        $revisions = array();
+        $numLines = count($output);
+        $revisions = [];
 
         for ($i = 0; $i < $numLines; $i++) {
             $tmp = explode(' ', $output[$i]);
@@ -90,15 +137,15 @@ class Git
             } elseif ($tmp[0] == 'Author:') {
                 $author = implode(' ', array_slice($tmp, 1));
             } elseif ($tmp[0] == 'Date:' && isset($author) && isset($sha1)) {
-                $revisions[] = array(
-                  'author'  => $author,
-                  'date'    => DateTime::createFromFormat(
-                      'D M j H:i:s Y O',
-                      implode(' ', array_slice($tmp, 3))
-                  ),
-                  'sha1'    => $sha1,
-                  'message' => isset($output[$i+2]) ? trim($output[$i+2]) : ''
-                );
+                $revisions[] = [
+                    'author' => $author,
+                    'date' => DateTime::createFromFormat(
+                        'D M j H:i:s Y O',
+                        implode(' ', array_slice($tmp, 3))
+                    ),
+                    'sha1' => $sha1,
+                    'message' => isset($output[$i + 2]) ? trim($output[$i + 2]) : '',
+                ];
 
                 unset($author);
                 unset($sha1);
@@ -115,8 +162,8 @@ class Git
     {
         $output = $this->execute('status');
 
-        return $output[count($output)-1] == 'nothing to commit, working directory clean' ||
-               $output[count($output)-1] == 'nothing to commit, working tree clean';
+        return $output[count($output) - 1] == 'nothing to commit, working directory clean' ||
+        $output[count($output) - 1] == 'nothing to commit, working tree clean';
     }
 
     /**
@@ -128,8 +175,8 @@ class Git
      */
     protected function execute($command)
     {
-        $command = 'cd ' . escapeshellarg($this->repositoryPath) . '; git ' . $command . ' 2>&1';
- 
+        $command = 'cd ' . escapeshellarg($this->repositoryPath) . ' && git ' . $command . ' 2>&1';
+
         if (DIRECTORY_SEPARATOR == '/') {
             $command = 'LC_ALL=en_US.UTF-8 ' . $command;
         }
